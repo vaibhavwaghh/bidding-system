@@ -2,8 +2,8 @@ import { getPlayers } from "../services/apiCabins";
 import Heading from "../ui/Heading";
 import Row from "../ui/Row";
 
-import CabinTable2 from "../features/cabins/CabinTable2";
-function Cabins2() {
+import AllTeamsTable from "../features/cabins/AllTeamsTable";
+function AllTeamsCabin() {
   const data = getPlayers();
   console.log(data);
   return (
@@ -13,10 +13,10 @@ function Cabins2() {
         <p>Filter/sort</p>
       </Row>
       <Row>
-        <CabinTable2 />
+        <AllTeamsTable />
       </Row>
     </>
   );
 }
 
-export default Cabins2;
+export default AllTeamsCabin;

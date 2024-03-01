@@ -73,9 +73,37 @@ function MainNav() {
             <HiOutlineUser />
             <span>Teams</span>
           </StyledNavLink>
-          <StyledNavLink to="/boughtPlayers">
+          <StyledNavLink to="/boughtPlayersByUser1">
             <HiOutlineCog6Tooth />
-            <span>BoughtPlayers</span>
+            <span>Bought Players - User 1</span>
+          </StyledNavLink>
+          <StyledNavLink to="/boughtPlayersByUser2">
+            <HiOutlineCog6Tooth />
+            <span>Bought Players - User 2</span>
+          </StyledNavLink>
+          <StyledNavLink to="/boughtPlayersByUser3">
+            <HiOutlineCog6Tooth />
+            <span>Bought Players - User 3</span>
+          </StyledNavLink>
+          <StyledNavLink to="/boughtPlayersByUser4">
+            <HiOutlineCog6Tooth />
+            <span>Bought Players - User 4</span>
+          </StyledNavLink>
+          <StyledNavLink to="/boughtPlayersByUser5">
+            <HiOutlineCog6Tooth />
+            <span>Bought Players - User 5</span>
+          </StyledNavLink>
+          <StyledNavLink to="/boughtPlayersByUser6">
+            <HiOutlineCog6Tooth />
+            <span>Bought Players - User 6</span>
+          </StyledNavLink>
+          <StyledNavLink to="/boughtPlayersByUser7">
+            <HiOutlineCog6Tooth />
+            <span>Bought Players - User 7</span>
+          </StyledNavLink>
+          <StyledNavLink to="/boughtPlayersByUser8">
+            <HiOutlineCog6Tooth />
+            <span>Bought Players - User 8</span>
           </StyledNavLink>
         </li>
       </NavList>

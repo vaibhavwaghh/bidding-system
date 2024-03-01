@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 import { getTeams } from "../../services/apiCabins";
 import Spinner from "../../ui/Spinner";
-import CabinRow1 from "./CabinRow1";
+
+import AllTeamsRow from "./AllTeamsRow";
 const Table = styled.div`
   border: 1px solid var(--color-grey-200);
 
@@ -27,7 +28,7 @@ const TableHeader = styled.header`
   padding: 1.6rem 2.4rem;
 `;
 
-function CabinTable1() {
+function AllTeamsTable() {
   const {
     isLoading,
     data: teams,
@@ -38,6 +39,8 @@ function CabinTable1() {
   });
 
   if (isLoading) return <Spinner />;
+  console.log(teams);
+  if (teams.length === 0) return <p>NO TEAMS FOUND</p>;
   return (
     <>
       <Table role="table">
@@ -50,11 +53,11 @@ function CabinTable1() {
           <div></div>
         </TableHeader>
         {teams.map((team) => (
-          <CabinRow1 team={team} key={team.id} />
+          <AllTeamsRow team={team} key={team.id} />
         ))}
       </Table>
     </>
   );
 }
 
-export default CabinTable1;
+export default AllTeamsTable;

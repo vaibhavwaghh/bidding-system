@@ -1,7 +1,10 @@
 import supabase from "./supaBase";
 
 export async function getPlayers() {
-  let { data, error } = await supabase.from("PLAYERS").select("*");
+  let { data, error } = await supabase
+    .from("PLAYERS")
+    .select("*")
+    .order("playerorder", { ascending: true });
   if (error) {
     console.error(error);
     throw new Error("DATA NOT LOADED");
@@ -19,7 +22,10 @@ export async function deletePlayer(id) {
 }
 
 export async function getTeams() {
-  let { data, error } = await supabase.from("Teams").select("*");
+  let { data, error } = await supabase
+    .from("Teams")
+    .select("*")
+    .order("teamOrder", { ascending: true });
   if (error) {
     console.error(error);
     throw new Error("DATA NOT LOADED");
@@ -36,8 +42,10 @@ export async function deleteTeam(id) {
   return data;
 }
 
-export async function getBookedPlayer() {
-  let { data, error } = await supabase.from("BoughtPlayers").select("*");
+export async function getBookedPlayer(userNo) {
+  let { data, error } = await supabase
+    .from(`BoughtPlayersByuser${userNo}`)
+    .select("*");
   if (error) {
     console.error(error);
     throw new Error("DATA NOT LOADED");
@@ -47,7 +55,7 @@ export async function getBookedPlayer() {
 
 export async function deleteBookedPlayer(id) {
   const { data, error } = await supabase
-    .from("BoughtPlayers")
+    .from("BoughtPlayersByuser1")
     .delete()
     .eq("id", id);
   if (error) {
@@ -55,4 +63,90 @@ export async function deleteBookedPlayer(id) {
     throw new Error("DATA NOT LOADED");
   }
   return data;
+}
+
+export async function updatePlayer(id, newBidAmount) {
+  const { data, error } = await supabase
+    .from("PLAYERS")
+    .update({ bidAmount: newBidAmount })
+    .eq("id", id);
+  if (error) {
+    console.error(error);
+    throw new Error("Failed to update player");
+  }
+  return data;
+}
+export async function insertBookedPlayer(playerData, userNo) {
+  try {
+    const { data, error } = await supabase
+      .from(`BoughtPlayersByuser${userNo}`)
+      .insert(playerData);
+    if (error) {
+      console.error(error);
+      throw new Error("Failed to insert player into bookedPlayer database");
+    }
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to insert player into bookedPlayer database");
+  }
+}
+
+export async function updateCurrentBoughtTeam(userNo) {
+  console.log("I AM FROM updateCurrentBoughtTeam");
+  try {
+    // Count the number of bought players for the user
+    const { data: boughtPlayersCount, error: countError } = await supabase
+      .from(`BoughtPlayersByuser${userNo}`)
+      .select("count", { count: "exact" });
+
+    if (countError) {
+      console.error(countError);
+      throw new Error("Failed to count bought players");
+    }
+    let count = boughtPlayersCount[0].count;
+
+    // const { data: currBidAmount } = await supabase
+    //   .from("PLAYERS")
+    //   .select("bidAmount")
+    //   .eq("playerorder", userNo);
+
+    // let newExpense = currBidAmount[0].bidAmount;
+    console.log("THIS IS MY COUNT DATA , user no , new expense", count, userNo);
+    // Update the CurrentNumberOfPlayers in teams table
+    const { data: updatedData, error: updateError } = await supabase
+      .from("Teams")
+      .update({
+        CurrentNumberOfPlayers: count, // Assuming boughtPlayersCount is an array with a single object containing the count
+        // totalexpenses: supabase.sql(`totalexpenses + ${newExpense}`),
+      })
+      .eq("teamOrder", userNo);
+
+    if (updateError) {
+      console.error(updateError);
+      throw new Error("Failed to update currentBoughtPlayers");
+    }
+
+    return updatedData;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to update currentBoughtPlayers");
+  }
+}
+
+export async function insertAndDeletePlayer(currplayer, userNo) {
+  console.log("THIS IS INSERT AND DELETE PLAYER", currplayer, userNo);
+  try {
+    // First, insert the player into the bookedPlayer database
+    await insertBookedPlayer(currplayer, userNo); // You need to implement this function
+
+    // Second, delete the player from the player database
+    await deletePlayer(currplayer.id);
+    await updateCurrentBoughtTeam(userNo);
+    // Return success message or handle accordingly
+    return "Player inserted into bookedPlayer database and deleted from player database successfully";
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to insert and delete player");
+  }
 }

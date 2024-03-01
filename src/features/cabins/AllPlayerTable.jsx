@@ -1,8 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
-import { getPlayers } from "../../services/apiCabins";
+import { getPlayers, insertAndDeletePlayer } from "../../services/apiCabins";
 import Spinner from "../../ui/Spinner";
-import CabinRow from "./CabinRow";
+import CabinRow from "./AllPlayersRow";
+import AllPlayersRow from "./AllPlayersRow";
+import { io } from "socket.io-client";
 const Table = styled.div`
   border: 1px solid var(--color-grey-200);
 
@@ -27,17 +29,24 @@ const TableHeader = styled.header`
   padding: 1.6rem 2.4rem;
 `;
 
-function CabinTable() {
-  const {
-    isLoading,
-    data: players,
-    error,
-  } = useQuery({
-    queryKey: ["allPlayers"],
-    queryFn: getPlayers,
+function AllPlayerTable({ isLoading, latestPlayer, userJoined }) {
+  const queryClient = useQueryClient();
+  const socket = io();
+  const { isLoading: isUpdating, mutate } = useMutation({
+    mutationFn: (currplayer) => insertAndDeletePlayer(currplayer, userJoined),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["allPlayers"],
+      });
+    },
   });
-  console.log(players);
-  if (isLoading) return <Spinner />;
+
+  socket.on("countdownend", () => {
+    console.log("THIS HAPPENS WHEN COUNTDOWN ENDS", latestPlayer);
+    mutate(latestPlayer);
+  });
+  if (isLoading || isUpdating) return <Spinner />;
+
   return (
     <>
       <Table role="table">
@@ -49,12 +58,13 @@ function CabinTable() {
           <div>Last Year price</div>
           <div></div>
         </TableHeader>
-        {players.map((player) => (
+        <AllPlayersRow player={latestPlayer} userJoined={userJoined} />
+        {/* {players.map((player) => (
           <CabinRow player={player} key={player.id} />
-        ))}
+        ))} */}
       </Table>
     </>
   );
 }
 
-export default CabinTable;
+export default AllPlayerTable;

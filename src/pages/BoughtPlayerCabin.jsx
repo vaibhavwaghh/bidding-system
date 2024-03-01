@@ -1,21 +1,22 @@
 import { getPlayers } from "../services/apiCabins";
 import Heading from "../ui/Heading";
 import Row from "../ui/Row";
-import CabinTable from "../features/cabins/CabinTable";
-function Cabins() {
+
+import BoughtPlayersTable from "../features/cabins/BoughtPlayersTable";
+function BoughtPlayerCabin({ userNo }) {
   const data = getPlayers();
   console.log(data);
   return (
     <>
       <Row type="horizontal">
-        <Heading as="h1">All Players</Heading>
+        <Heading as="h1">All Teams</Heading>
         <p>Filter/sort</p>
       </Row>
       <Row>
-        <CabinTable />
+        <BoughtPlayersTable userNo={userNo} />
       </Row>
     </>
   );
 }
 
-export default Cabins;
+export default BoughtPlayerCabin;

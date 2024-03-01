@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 import { getBookedPlayer, getTeams } from "../../services/apiCabins";
 import Spinner from "../../ui/Spinner";
-import CabinRow2 from "./CabinRow2";
+
+import BoughtPlayersRow from "./BoughtPlayersRow";
 const Table = styled.div`
   border: 1px solid var(--color-grey-200);
 
@@ -27,34 +28,41 @@ const TableHeader = styled.header`
   padding: 1.6rem 2.4rem;
 `;
 
-function CabinTable2() {
+function BoughtPlayersTable({ userNo }) {
   const {
     isLoading,
     data: boughtPlayers,
     error,
-  } = useQuery({
-    queryKey: ["getBoughtPlayers"],
-    queryFn: getBookedPlayer,
-  });
+  } = useQuery(
+    ["getBoughtPlayers", userNo], // Unique query key based on userNo
+    () => getBookedPlayer(userNo), // Pass userNo as a parameter to the query function
+    {
+      refetchOnWindowFocus: false, // Optional: Disable refetching on window focus
+    }
+  );
 
+  console.log(isLoading);
   if (isLoading) return <Spinner />;
+  if (error) return <p>NOT FOUND</p>;
+  if (boughtPlayers) {
+    if (boughtPlayers.length === 0) return <p>NO PLAYERS WERE BOUGHT</p>;
+  }
   return (
     <>
       <Table role="table">
         <TableHeader role="row">
           <div></div>
           <div>Player Name</div>
-          <div>Runs Scored</div>
-          <div>Price to buy</div>
-          <div>Retained (T/F)</div>
-          <div></div>
+          <div>Total Runs Scored</div>
+          <div>Previous Year sold</div>
+          <div>InitialAmount</div>
         </TableHeader>
         {boughtPlayers.map((boughtPlayer) => (
-          <CabinRow2 boughtPlayer={boughtPlayer} key={boughtPlayer.id} />
+          <BoughtPlayersRow boughtPlayer={boughtPlayer} key={boughtPlayer.id} />
         ))}
       </Table>
     </>
   );
 }
 
-export default CabinTable2;
+export default BoughtPlayersTable;

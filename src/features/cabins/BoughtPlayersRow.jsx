@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deletePlayer } from "../../services/apiCabins";
+import { deleteBookedPlayer } from "../../services/apiCabins";
+import Spinner from "../../ui/Spinner";
 
 const TableRow = styled.div`
   display: grid;
@@ -42,7 +43,7 @@ const Discount = styled.div`
   color: var(--color-green-700);
 `;
 
-function CabinRow({ player }) {
+function BoughtPlayersRow({ boughtPlayer }) {
   const {
     id: playerId,
     PlayerName,
@@ -50,33 +51,22 @@ function CabinRow({ player }) {
     InitialAmout,
     PreviousYearSold,
     image,
-  } = player;
-  const queryClient = useQueryClient();
-  const { isLoading: isDeleteing, mutate } = useMutation({
-    mutationFn: (id) => deletePlayer(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["allPlayers"],
-      });
-    },
-  });
-  function handleClick() {
-    mutate(playerId);
-  }
+  } = boughtPlayer;
+  console.log(boughtPlayer);
+  if (!boughtPlayer) return <Spinner />;
   return (
     <>
       <TableRow role="row">
-        <Img src={image} />
+        {/* Display userJoined message */}
+
         <Cabin>{PlayerName}</Cabin>
         <div>{TotalRunsScored} </div>
         <Price>{formatCurrency(InitialAmout)}</Price>
         <Discount>{formatCurrency(PreviousYearSold)}</Discount>
-        <button onClick={handleClick} disabled={isDeleteing}>
-          Delete
-        </button>
+        <button>Update InitialAmount</button>
       </TableRow>
     </>
   );
 }
 
-export default CabinRow;
+export default BoughtPlayersRow;

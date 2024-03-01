@@ -42,11 +42,11 @@ const Discount = styled.div`
   color: var(--color-green-700);
 `;
 
-function CabinRow1({ team }) {
+function AllTeamsRow({ team }) {
   const {
     id: teamId,
     TeamName,
-    NumberofPlayers,
+    CurrentNumberOfPlayers,
     capacity,
     Wallet,
     image,
@@ -68,7 +68,7 @@ function CabinRow1({ team }) {
       <TableRow role="row">
         <Img src={image} />
         <Cabin>{TeamName}</Cabin>
-        <div>{NumberofPlayers} in Team Now </div>
+        <div>{CurrentNumberOfPlayers} in Team Now </div>
         <Price>{capacity}</Price>
         <Discount>{formatCurrency(Wallet)}</Discount>
         <button onClick={handleClick} disabled={isDeleteing}>
@@ -79,4 +79,4 @@ function CabinRow1({ team }) {
   );
 }
 
-export default CabinRow1;
+export default AllTeamsRow;
