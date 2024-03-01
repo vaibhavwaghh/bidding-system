@@ -5,6 +5,7 @@ import Spinner from "../../ui/Spinner";
 import CabinRow from "./AllPlayersRow";
 import AllPlayersRow from "./AllPlayersRow";
 import { io } from "socket.io-client";
+import { useEffect } from "react";
 const Table = styled.div`
   border: 1px solid var(--color-grey-200);
 
@@ -29,24 +30,57 @@ const TableHeader = styled.header`
   padding: 1.6rem 2.4rem;
 `;
 
+// function AllPlayerTable({ isLoading, latestPlayer, userJoined }) {
+//   const queryClient = useQueryClient();
+//   const socket = io();
+//   const { isLoading: isUpdating, mutate } = useMutation(
+//     (currplayer) => insertAndDeletePlayer(currplayer, userJoined),
+//     {
+//       onSuccess: () => {
+//         queryClient.invalidateQueries({
+//           queryKey: ["allPlayers"],
+//         });
+//       },
+//       refetchOnWindowFocus: false, // Optional: Disable refetching on window focus
+//     }
+//   );
+
+//   socket.on("countdownend", () => {
+//     console.log("THIS HAPPENS WHEN COUNTDOWN ENDS", latestPlayer);
+//     mutate(latestPlayer);
+//   });
+//   if (isLoading || isUpdating) return <Spinner />;
 function AllPlayerTable({ isLoading, latestPlayer, userJoined }) {
   const queryClient = useQueryClient();
   const socket = io();
-  const { isLoading: isUpdating, mutate } = useMutation({
-    mutationFn: (currplayer) => insertAndDeletePlayer(currplayer, userJoined),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["allPlayers"],
-      });
-    },
-  });
+  const { isLoading: isUpdating, mutate } = useMutation(
+    (currplayer) => insertAndDeletePlayer(currplayer, userJoined),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["allPlayers"],
+        });
+      },
+      onError: (error) => {
+        console.error("Mutation error:", error);
+        // Handle mutation errors appropriately
+      },
+      refetchOnWindowFocus: false,
+    }
+  );
 
-  socket.on("countdownend", () => {
-    console.log("THIS HAPPENS WHEN COUNTDOWN ENDS", latestPlayer);
-    mutate(latestPlayer);
-  });
+  useEffect(() => {
+    socket.on("countdownend", () => {
+      console.log("THIS HAPPENS WHEN COUNTDOWN ENDS", latestPlayer);
+      mutate(latestPlayer);
+    });
+
+    return () => {
+      socket.off("countdownend");
+    };
+  }, [socket, latestPlayer, mutate]);
+
   if (isLoading || isUpdating) return <Spinner />;
-
   return (
     <>
       <Table role="table">

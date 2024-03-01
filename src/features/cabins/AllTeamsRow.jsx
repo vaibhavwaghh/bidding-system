@@ -50,6 +50,7 @@ function AllTeamsRow({ team }) {
     capacity,
     Wallet,
     image,
+    totalExpense,
   } = team;
   const queryClient = useQueryClient();
   const { isLoading: isDeleteing, mutate } = useMutation({
@@ -71,9 +72,10 @@ function AllTeamsRow({ team }) {
         <div>{CurrentNumberOfPlayers} in Team Now </div>
         <Price>{capacity}</Price>
         <Discount>{formatCurrency(Wallet)}</Discount>
-        <button onClick={handleClick} disabled={isDeleteing}>
+        <div>{totalExpense}</div>
+        {/* <button onClick={handleClick} disabled={isDeleteing}>
           Delete
-        </button>
+        </button> */}
       </TableRow>
     </>
   );

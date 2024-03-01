@@ -74,9 +74,11 @@ function AllPlayersRow({ player, userJoined }) {
     <>
       <TableRow role="row">
         {/* Display userJoined message */}
-        {userJoined && (
-          <div>User {userJoined} has clicked on update Amount Button</div>
-        )}
+
+        <div>
+          {userJoined &&
+            `User ${userJoined} has clicked on update Amount Button`}
+        </div>
 
         <Cabin>{PlayerName}</Cabin>
         <div>{TotalRunsScored} </div>

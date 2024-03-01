@@ -37,7 +37,7 @@ function AllPlayersCabin() {
   return (
     <>
       <Row type="horizontal">
-        <Heading as="h1">All Players</Heading>
+        <Heading as="h1">Current contest</Heading>
         <CountdownComponent />
       </Row>
       <Row>

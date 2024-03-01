@@ -1,9 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
-import { getTeams } from "../../services/apiCabins";
-import Spinner from "../../ui/Spinner";
-
-import AllTeamsRow from "./AllTeamsRow";
+import AllPlayersRow from "./AllPlayersRow";
+import AllDatabasePlayerRow from "./AllDatabasePlayerRow";
 const Table = styled.div`
   border: 1px solid var(--color-grey-200);
 
@@ -27,37 +24,25 @@ const TableHeader = styled.header`
   color: var(--color-grey-600);
   padding: 1.6rem 2.4rem;
 `;
-
-function AllTeamsTable() {
-  const {
-    isLoading,
-    data: teams,
-    error,
-  } = useQuery({
-    queryKey: ["allTeams"],
-    queryFn: getTeams,
-  });
-
-  if (isLoading) return <Spinner />;
-  console.log(teams);
-  if (teams.length === 0) return <p>NO TEAMS FOUND</p>;
+function AllDatabasePlayerTable({ players }) {
   return (
     <>
       <Table role="table">
         <TableHeader role="row">
           <div></div>
-          <div>Team Name</div>
-          <div>Number of players</div>
-          <div>Capacity</div>
-          <div>Wallet</div>
-          <div>Total Expenses</div>
+          <div>Player Name</div>
+          <div>Runs Scored</div>
+          <div>Price</div>
+          <div>Last Year price</div>
+          <div></div>
         </TableHeader>
-        {teams.map((team) => (
-          <AllTeamsRow team={team} key={team.id} />
+
+        {players.map((player) => (
+          <AllDatabasePlayerRow player={player} key={player.id} />
         ))}
       </Table>
     </>
   );
 }
 
-export default AllTeamsTable;
+export default AllDatabasePlayerTable;

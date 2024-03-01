@@ -65,13 +65,17 @@ function MainNav() {
             <HiOutlineCalendarDays />
             <span>Bookings</span>
           </StyledNavLink> */}
-          <StyledNavLink to="/players">
+          <StyledNavLink to="/allPlayers">
             <HiOutlineHomeModern />
             <span>All Players</span>
           </StyledNavLink>
           <StyledNavLink to="/teams">
             <HiOutlineUser />
             <span>Teams</span>
+          </StyledNavLink>
+          <StyledNavLink to="/contest">
+            <HiOutlineHomeModern />
+            <span>Start Contest</span>
           </StyledNavLink>
           <StyledNavLink to="/boughtPlayersByUser1">
             <HiOutlineCog6Tooth />

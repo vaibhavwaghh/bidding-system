@@ -9,7 +9,7 @@ function BoughtPlayerCabin({ userNo }) {
   return (
     <>
       <Row type="horizontal">
-        <Heading as="h1">All Teams</Heading>
+        <Heading as="h1">Bought Players for User {userNo}</Heading>
         <p>Filter/sort</p>
       </Row>
       <Row>

@@ -9,7 +9,7 @@ function AllTeamsCabin() {
   return (
     <>
       <Row type="horizontal">
-        <Heading as="h1">All Players</Heading>
+        <Heading as="h1">All Teams</Heading>
         <p>Filter/sort</p>
       </Row>
       <Row>

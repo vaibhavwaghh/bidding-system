@@ -92,7 +92,7 @@ export async function insertBookedPlayer(playerData, userNo) {
   }
 }
 
-export async function updateCurrentBoughtTeam(userNo) {
+export async function updateCurrentBoughtTeam(userNo, newExpense) {
   console.log("I AM FROM updateCurrentBoughtTeam");
   try {
     // Count the number of bought players for the user
@@ -112,13 +112,24 @@ export async function updateCurrentBoughtTeam(userNo) {
     //   .eq("playerorder", userNo);
 
     // let newExpense = currBidAmount[0].bidAmount;
-    console.log("THIS IS MY COUNT DATA , user no , new expense", count, userNo);
+    const { data: currexpense, error: updateError1 } = await supabase
+      .from("Teams")
+      .select("totalExpense")
+      .eq("teamOrder", userNo);
+    console.log(
+      "THIS IS MY COUNT DATA , user no , new expense",
+      count,
+      userNo,
+      newExpense,
+      currexpense[0].totalExpense
+    );
+    let total = newExpense + currexpense[0].totalExpense;
     // Update the CurrentNumberOfPlayers in teams table
     const { data: updatedData, error: updateError } = await supabase
       .from("Teams")
       .update({
         CurrentNumberOfPlayers: count, // Assuming boughtPlayersCount is an array with a single object containing the count
-        // totalexpenses: supabase.sql(`totalexpenses + ${newExpense}`),
+        totalExpense: total,
       })
       .eq("teamOrder", userNo);
 
@@ -142,7 +153,7 @@ export async function insertAndDeletePlayer(currplayer, userNo) {
 
     // Second, delete the player from the player database
     await deletePlayer(currplayer.id);
-    await updateCurrentBoughtTeam(userNo);
+    await updateCurrentBoughtTeam(userNo, currplayer.bidAmount);
     // Return success message or handle accordingly
     return "Player inserted into bookedPlayer database and deleted from player database successfully";
   } catch (error) {

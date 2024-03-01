@@ -48,7 +48,7 @@ function BoughtPlayersRow({ boughtPlayer }) {
     id: playerId,
     PlayerName,
     TotalRunsScored,
-    InitialAmout,
+    bidAmount,
     PreviousYearSold,
     image,
   } = boughtPlayer;
@@ -57,13 +57,11 @@ function BoughtPlayersRow({ boughtPlayer }) {
   return (
     <>
       <TableRow role="row">
-        {/* Display userJoined message */}
-
+        <Img src={image} />
         <Cabin>{PlayerName}</Cabin>
         <div>{TotalRunsScored} </div>
-        <Price>{formatCurrency(InitialAmout)}</Price>
+        <Price>{formatCurrency(bidAmount)}</Price>
         <Discount>{formatCurrency(PreviousYearSold)}</Discount>
-        <button>Update InitialAmount</button>
       </TableRow>
     </>
   );

@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import AllTeamsCabin from "./pages/AllTeamsCabin";
 import AllPlayersCabin from "./pages/AllPlayersCabin";
 import BoughtPlayerCabin from "./pages/BoughtPlayerCabin";
+import AllDatabasePlayerCabin from "./pages/AllDatabasePlayerCabin";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 0 } },
@@ -50,7 +51,9 @@ function App() {
               <Route path="dashboard" element={<DashBoard />} />
               <Route path="bookings" element={<Bookings />} />
               <Route path="teams" element={<AllTeamsCabin />} />
-              <Route path="players" element={<AllPlayersCabin />} />
+              <Route path="contest" element={<AllPlayersCabin />} />
+              <Route path="allPlayers" element={<AllDatabasePlayerCabin />} />
+
               <Route
                 path="boughtPlayersByUser1"
                 element={<BoughtPlayerCabin userNo="1" />}

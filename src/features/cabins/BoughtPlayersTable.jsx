@@ -37,7 +37,7 @@ function BoughtPlayersTable({ userNo }) {
     ["getBoughtPlayers", userNo], // Unique query key based on userNo
     () => getBookedPlayer(userNo), // Pass userNo as a parameter to the query function
     {
-      refetchOnWindowFocus: false, // Optional: Disable refetching on window focus
+      refetchOnWindowFocus: true, // Optional: Disable refetching on window focus
     }
   );
 
@@ -54,8 +54,8 @@ function BoughtPlayersTable({ userNo }) {
           <div></div>
           <div>Player Name</div>
           <div>Total Runs Scored</div>
-          <div>Previous Year sold</div>
-          <div>InitialAmount</div>
+          <div>Bid Amount</div>
+          <div>Previous year sold</div>
         </TableHeader>
         {boughtPlayers.map((boughtPlayer) => (
           <BoughtPlayersRow boughtPlayer={boughtPlayer} key={boughtPlayer.id} />
