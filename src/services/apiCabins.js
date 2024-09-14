@@ -33,12 +33,28 @@ export async function getTeams() {
   return data;
 }
 
+export async function getWalletByUserNo(userNo) {
+  console.log("THIS IS MY GET WALLET USER NUMBER", userNo);
+  let { data, error } = await supabase
+    .from("Teams")
+    .select("Wallet, totalExpense")
+    .eq("teamOrder", userNo);
+
+  if (error) {
+    console.error(error);
+    throw new Error("DATA NOT LOADED");
+  }
+  console.log("THIS IS MY GET WALLET USER DATA", data);
+
+  return data;
+}
 export async function deleteTeam(id) {
   const { data, error } = await supabase.from("Teams").delete().eq("id", id);
   if (error) {
     console.error(error);
     throw new Error("DATA NOT LOADED");
   }
+  console.log(data);
   return data;
 }
 
@@ -105,31 +121,27 @@ export async function updateCurrentBoughtTeam(userNo, newExpense) {
       throw new Error("Failed to count bought players");
     }
     let count = boughtPlayersCount[0].count;
-
-    // const { data: currBidAmount } = await supabase
-    //   .from("PLAYERS")
-    //   .select("bidAmount")
-    //   .eq("playerorder", userNo);
-
-    // let newExpense = currBidAmount[0].bidAmount;
-    const { data: currexpense, error: updateError1 } = await supabase
-      .from("Teams")
-      .select("totalExpense")
-      .eq("teamOrder", userNo);
+    console.log("THIS IS BEFORE CALLING GETWALLET BY USER NO", userNo, count);
+    const { data, error: updateError1 } = await getWalletByUserNo(userNo);
+    console.log("THIS IS GET VAIBHAV EXPENSE AND WALLET", data);
+    let totalExp = data[0].totalExpense + newExpense;
+    let totalWal = data[0].Wallet - newExpense;
     console.log(
-      "THIS IS MY COUNT DATA , user no , new expense",
+      "THIS IS MY COUNT DATA , user no , curr expense,curr Wallet , total exp , total wal",
       count,
       userNo,
-      newExpense,
-      currexpense[0].totalExpense
+      currExpense,
+      currWallet,
+      totalExp,
+      totalWal
     );
-    let total = newExpense + currexpense[0].totalExpense;
     // Update the CurrentNumberOfPlayers in teams table
     const { data: updatedData, error: updateError } = await supabase
       .from("Teams")
       .update({
         CurrentNumberOfPlayers: count, // Assuming boughtPlayersCount is an array with a single object containing the count
-        totalExpense: total,
+        totalExpense: totalExp,
+        Wallet: totalWal,
       })
       .eq("teamOrder", userNo);
 

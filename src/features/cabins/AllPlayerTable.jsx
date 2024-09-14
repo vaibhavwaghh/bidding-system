@@ -51,36 +51,7 @@ const TableHeader = styled.header`
 //   });
 //   if (isLoading || isUpdating) return <Spinner />;
 function AllPlayerTable({ isLoading, latestPlayer, userJoined }) {
-  const queryClient = useQueryClient();
-  const socket = io();
-  const { isLoading: isUpdating, mutate } = useMutation(
-    (currplayer) => insertAndDeletePlayer(currplayer, userJoined),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: ["allPlayers"],
-        });
-      },
-      onError: (error) => {
-        console.error("Mutation error:", error);
-        // Handle mutation errors appropriately
-      },
-      refetchOnWindowFocus: false,
-    }
-  );
-
-  useEffect(() => {
-    socket.on("countdownend", () => {
-      console.log("THIS HAPPENS WHEN COUNTDOWN ENDS", latestPlayer);
-      mutate(latestPlayer);
-    });
-
-    return () => {
-      socket.off("countdownend");
-    };
-  }, [socket, latestPlayer, mutate]);
-
-  if (isLoading || isUpdating) return <Spinner />;
+  if (isLoading) return <Spinner />;
   return (
     <>
       <Table role="table">

@@ -49,7 +49,6 @@ function App() {
             <Route element={<AppLayout />}>
               <Route index element={<Navigate replace to="/dashboard" />} />
               <Route path="dashboard" element={<DashBoard />} />
-              <Route path="bookings" element={<Bookings />} />
               <Route path="teams" element={<AllTeamsCabin />} />
               <Route path="contest" element={<AllPlayersCabin />} />
               <Route path="allPlayers" element={<AllDatabasePlayerCabin />} />
